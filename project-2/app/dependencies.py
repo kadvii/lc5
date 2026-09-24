@@ -1,4 +1,3 @@
-
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session
@@ -34,15 +33,13 @@ def get_current_user(
         raise HTTPException(status_code=403, detail="Account is disabled")
     return user
 
-    
+
 def require_roles(allowed_roles):
     """Build a dependency that only lets the given roles through."""
 
     def check_role(current_user: User = Depends(get_current_user)):
         if current_user.role not in allowed_roles:
-            raise HTTPException(
-                status_code=403, detail="You do not have permission to do this"
-            )
+            raise HTTPException(status_code=403, detail="You do not have permission to do this")
         return current_user
 
     return check_role

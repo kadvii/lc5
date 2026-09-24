@@ -1,4 +1,3 @@
-
 from sqlmodel import Session, SQLModel, create_engine
 
 from app.config import settings

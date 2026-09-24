@@ -1,7 +1,6 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import selectinload
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from app.database import get_session
 from app.dependencies import require_roles
@@ -34,6 +33,7 @@ def get_genres_or_404(session, genre_ids):
 
 # ---- anyone, no login needed ------------------------------------------
 
+
 @router.get("", response_model=list[BookResponse])
 def list_books(
     genre: str | None = None,
@@ -43,16 +43,19 @@ def list_books(
 ):
     # Load every book's author and genres in two extra queries in total,
     # instead of two extra queries per book.
-    query = select(Book).options(selectinload(Book.author), selectinload(Book.genres))
+    query = select(Book).options(
+        selectinload(Book.author),  # type: ignore[arg-type]
+        selectinload(Book.genres),  # type: ignore[arg-type]
+    )
 
     if genre is not None:
-        query = query.join(Book.genres).where(Genre.name == genre.lower())
+        query = query.join(Book.genres).where(Genre.name == genre.lower())  # type: ignore[arg-type]
     if author_id is not None:
         query = query.where(Book.author_id == author_id)
     if in_stock:
         query = query.where(Book.stock > 0)
 
-    return session.exec(query.order_by(Book.id)).all()
+    return session.exec(query.order_by(col(Book.id))).all()
 
 
 @router.get("/{book_id}", response_model=BookResponse)
@@ -61,6 +64,7 @@ def get_book(book_id: int, session: Session = Depends(get_session)):
 
 
 # ---- staff and admins -------------------------------------------------
+
 
 @router.post("", response_model=BookResponse, status_code=201)
 def create_book(
@@ -103,6 +107,7 @@ def update_book(
 
 
 # ---- admins only ------------------------------------------------------
+
 
 @router.delete("/{book_id}", status_code=204)
 def delete_book(

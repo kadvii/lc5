@@ -1,4 +1,3 @@
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
@@ -28,6 +27,8 @@ def place_order(
         raise HTTPException(status_code=409, detail=f"Only {book.stock} left in stock")
 
     book.stock -= new_order.quantity
+    assert current_user.id is not None
+    assert book.id is not None
     order = Order(
         user_id=current_user.id,  # from the token -- never from the request
         book_id=book.id,

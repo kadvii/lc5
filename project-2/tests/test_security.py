@@ -1,7 +1,11 @@
-
 """Unit tests: password hashing and tokens."""
 
-from app.security import create_access_token, hash_password, read_user_id_from_token, verify_password
+from app.security import (
+    create_access_token,
+    hash_password,
+    read_user_id_from_token,
+    verify_password,
+)
 
 
 def test_the_same_password_hashes_differently_every_time():

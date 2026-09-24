@@ -1,5 +1,4 @@
-
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Optional
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -88,4 +87,4 @@ class Order(SQLModel, table=True):
     quantity: int
     total_price: float
     status: OrderStatus = OrderStatus.pending
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))

@@ -1,4 +1,3 @@
-
 from getpass import getpass
 
 from pydantic import ValidationError
@@ -17,9 +16,7 @@ def create_admin(username, email, password):
 
     with Session(engine) as session:
         taken = session.exec(
-            select(User).where(
-                (User.username == details.username) | (User.email == details.email)
-            )
+            select(User).where((User.username == details.username) | (User.email == details.email))
         ).first()
         if taken:
             raise ValueError("A user with that username or email already exists")

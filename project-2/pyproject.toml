@@ -1,0 +1,51 @@
+[project]
+name = "bookstore-api"
+version = "0.1.0"
+description = "Book Store API with Users, Logins, Roles, and PostgreSQL"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "sqlmodel",
+    "pydantic-settings",
+    "email-validator",
+    "pwdlib[argon2]",
+    "pyjwt",
+    "python-multipart",
+    "psycopg2-binary",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "B008",   # do not perform function calls in argument defaults (FastAPI Depends pattern)
+    "UP042",  # inherit from (str, Enum) as specified in course syllabus
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = "app.config"
+# BaseSettings loads fields from environment / .env, mypy complains about missing call-arg for secret_key
+disable_error_code = ["call-arg"]

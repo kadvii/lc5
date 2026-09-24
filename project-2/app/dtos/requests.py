@@ -1,10 +1,9 @@
-
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.enums import OrderStatus, Role
 
-
 # ----------------------------------------------------------------- users
+
 
 class UserCreateRequest(BaseModel):
     username: str = Field(min_length=3, max_length=30)
@@ -43,6 +42,7 @@ class ActiveUpdateRequest(BaseModel):
 
 # --------------------------------------------------------------- authors
 
+
 class AuthorCreateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=100)
     email: EmailStr | None = None
@@ -62,6 +62,7 @@ class AuthorProfileRequest(BaseModel):
 
 # ---------------------------------------------------------------- genres
 
+
 class GenreCreateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=50)
 
@@ -74,6 +75,7 @@ class GenreCreateRequest(BaseModel):
 
 
 # ----------------------------------------------------------------- books
+
 
 class BookCreateRequest(BaseModel):
     title: str = Field(min_length=1, max_length=200)
@@ -108,6 +110,7 @@ class BookUpdateRequest(BaseModel):
 
 
 # ---------------------------------------------------------------- orders
+
 
 class OrderCreateRequest(BaseModel):
     book_id: int  # refers to a book that already exists

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, select
+from sqlmodel import Session, col, select
 
 from app.database import get_session
 from app.dependencies import require_roles
@@ -23,7 +23,7 @@ def get_genre_or_404(session: Session, genre_id: int) -> Genre:
 
 @router.get("", response_model=list[GenreResponse])
 def list_genres(session: Session = Depends(get_session)):
-    return session.exec(select(Genre).order_by(Genre.id)).all()
+    return session.exec(select(Genre).order_by(col(Genre.id))).all()
 
 
 @router.post("", response_model=GenreResponse, status_code=201)

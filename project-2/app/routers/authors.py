@@ -1,6 +1,5 @@
-
 from fastapi import APIRouter, Depends, HTTPException
-from sqlmodel import Session, func, select
+from sqlmodel import Session, col, func, select
 
 from app.database import get_session
 from app.dependencies import require_roles
@@ -24,17 +23,18 @@ def get_author_or_404(session, author_id):
 
 # ---- anyone, no login needed ------------------------------------------
 
+
 @router.get("", response_model=list[AuthorListItemResponse])
 def list_authors(has_books: bool = False, session: Session = Depends(get_session)):
-    query = select(Author, func.count(Book.id))
+    query = select(Author, func.count(col(Book.id)))
     if has_books:
         query = query.join(Book)  # INNER JOIN: only authors who have books
     else:
         query = query.outerjoin(Book)  # LEFT JOIN: every author, 0 if they have none
-    query = query.group_by(Author.id).order_by(Author.id)
+    query = query.group_by(col(Author.id)).order_by(col(Author.id))
 
     return [
-        AuthorListItemResponse(id=author.id, name=author.name, book_count=book_count)
+        AuthorListItemResponse(id=author.id or 0, name=author.name, book_count=book_count)
         for author, book_count in session.exec(query).all()
     ]
 
@@ -46,6 +46,7 @@ def get_author(author_id: int, session: Session = Depends(get_session)):
 
 
 # ---- staff and admins -------------------------------------------------
+
 
 @router.post("", response_model=AuthorResponse, status_code=201)
 def create_author(
@@ -82,6 +83,7 @@ def set_author_profile(
 
 
 # ---- admins only ------------------------------------------------------
+
 
 @router.delete("/{author_id}", status_code=204)
 def delete_author(

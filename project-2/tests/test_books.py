@@ -1,5 +1,6 @@
 """Integration tests: the catalogue, and who is allowed to change it."""
 
+
 def test_anyone_can_list_books_and_it_starts_empty(client):
     response = client.get("/books")
 

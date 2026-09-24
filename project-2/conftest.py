@@ -2,6 +2,7 @@
 
 import pytest
 from fastapi.testclient import TestClient
+from main import app
 from sqlalchemy.pool import StaticPool
 from sqlmodel import Session, SQLModel, create_engine
 
@@ -9,7 +10,6 @@ from app.database import get_session
 from app.enums import Role
 from app.models import User
 from app.security import hash_password
-from main import app
 
 
 @pytest.fixture(name="session")

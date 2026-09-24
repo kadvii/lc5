@@ -53,9 +53,9 @@ def test_the_author_list_counts_books_and_keeps_authors_with_none(client, staff)
     counts = {author["name"]: author["book_count"] for author in client.get("/authors").json()}
 
     assert counts == {"Frank Herbert": 1, "Jane Austen": 0}
-    assert [
-        author["name"] for author in client.get("/authors?has_books=true").json()
-    ] == ["Frank Herbert"]
+    assert [author["name"] for author in client.get("/authors?has_books=true").json()] == [
+        "Frank Herbert"
+    ]
 
 
 def test_an_author_keeps_their_one_profile(client, staff):
