@@ -50,10 +50,5 @@ def delete_genre(
     current_user: User = Depends(admin_only),
 ):
     genre = get_genre_or_404(session, genre_id)
-    if genre.books:
-        raise HTTPException(
-            status_code=409,
-            detail="This genre still has books. Remove it from those books first.",
-        )
     session.delete(genre)
     session.commit()
