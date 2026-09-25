@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:16
+    container_name: bookstore-db
+    environment:
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: bookstore
+    ports:
+      - "5432:5432"
+    volumes:
+      - bookstore_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bookstore"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: bookstore-api
+    env_file:
+      - .env
+    environment:
+      # Overrides the .env value: inside Compose's network the database is
+      # reachable at the service name "db", not "localhost".
+      DATABASE_URL: postgresql://postgres:devpassword@db:5432/bookstore
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  bookstore_data:
